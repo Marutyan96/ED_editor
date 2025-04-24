@@ -1,0 +1,55 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Python Online Editor{% endblock %}
+{% block header %}Python Editor{% endblock %}
+{% block file_accept %}.py{% endblock %}
+
+{% block extra_head %}
+<!-- Python-specific CodeMirror mode -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+{% endblock %}
+
+{% block default_code %}# Welcome to Python Editor!
+print("Hello, World!")
+
+def greet(name):
+    return f"Hello, {name}!"
+
+# Try me:
+print(greet("Awesome Coder")){% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="module">
+    import { initEditor } from "{% static 'js/main.js' %}";
+    import { runCode } from "{% static 'js/websocket.js' %}";
+    import { initButtons } from "{% static 'js/buttons.js' %}";
+    import { initThemeToggle } from "{% static 'js/theme.js' %}";
+
+    const { editor, setupRunCode } = initEditor();
+    
+    if (editor) {
+        // Настройка Python-режима
+        editor.setOption('mode', 'python');
+        
+        // Инициализация функций
+        setupRunCode(runCode);
+        initButtons(editor, runCode);  // Явно передаем runCode
+        initThemeToggle(editor);
+
+        // Для отладки
+        window.editor = editor;
+    } else {
+        console.error('Ошибка инициализации редактора');
+    }
+</script>
+<script type="module" src="{% static 'js/editor_hints.js' %}"></script>
+<script type="module" src="{% static 'js/autoClose.js' %}"></script>
+<script type="module" src="{% static 'js/websocket.js' %}"></script>
+<script type="module" src="{% static 'js/buttons.js' %}"></script>
+{% endblock %}

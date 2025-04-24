@@ -1,0 +1,30 @@
+.resizer {
+    position: absolute;
+
+
+    width: 1px;
+    height: 100%;
+    background-color: #6e6e6e;
+    cursor: col-resize;
+    z-index: 100;
+
+}
+
+.resizer:hover {
+    background-color: #69f0d5;
+}
+#resizer.horizontal {
+    width: 1px;
+    height: 100%; /* Full height of container */
+    left: 50%;
+    transform: translateX(-50%);
+    cursor: col-resize;
+}
+
+#resizer.vertical {
+    height: 1px;
+    width: 100%; /* Full width of container */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: row-resize;
+}

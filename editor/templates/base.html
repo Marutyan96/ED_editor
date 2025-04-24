@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Online code editor with real-time execution">
+    <title>{% block title %}Code Editor{% endblock %}</title>
+
+<!-- Для PNG -->
+<link rel="icon" type="image/png" href="{% static 'images/favicon_io/favicon.png' %}">
+
+<!-- Для ICO (если нужно) -->
+<link rel="shortcut icon" href="{% static 'images/favicon_io/favicon.ico' %}" type="image/x-icon">
+
+    {% comment %} шрифт Pixelify Sans {% endcomment %}
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- CodeMirror ресурсы -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/monokai.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+    
+    <!-- Общие стили -->
+    <link rel="stylesheet" href="{% static 'css/codemirror-hints.css' %}">
+    <link rel="stylesheet" href="{% static 'css/language-card.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/resize-handle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/input.css' %}">
+    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header class="logo" translate="no">
+        <span class="pixel-logo" translate="no">Run_Code</span>
+        {% block header %}{% endblock %}
+    </header>
+    
+    <nav class="controls" translate="no">
+        <button id="run-btn" class="run-button" title="Run code"><i class="fas fa-play"></i> Run</button>
+        <button id="clear-btn" class="clear-button" title="Clear editor and output"><i class="fas fa-trash"></i> Clear</button>
+        <input type="file" id="load-file" accept="{% block file_accept %}.txt{% endblock %}" style="display: none;">
+        <button id="save-btn" class="save-button" title="Save code"><i class="fas fa-download"></i> Save</button>
+        <button id="layout-toggle" title="Toggle layout"><i class="fas fa-exchange-alt"></i> Layout</button>
+        <button id="theme-toggle" title="Toggle theme">
+            <i class="fas fa-moon"></i> <span id="theme-text">Dark</span>
+        </button>
+    </nav>
+    
+    <div id="container">
+        <div class="language-selector-container">
+            <!-- Рабочие редакторы -->
+            <a href="{% url 'index' %}" class="language-card {% if request.resolver_match.url_name == 'index' %}active{% endif %}" title="Python">
+                <i class="devicon-python-plain"></i>
+            </a>
+            <a href="{% url 'javascript_editor' %}" class="language-card {% if request.resolver_match.url_name == 'javascript_editor' %}active{% endif %}" title="JavaScript">
+                <i class="devicon-javascript-plain"></i>
+            </a>
+            <a href="{% url 'html_editor' %}" class="language-card {% if request.resolver_match.url_name == 'html_editor' %}active{% endif %}" title="HTML/CSS">
+                <i class="devicon-html5-plain"></i>
+            </a>
+            <a href="{% url 'java_editor' %}" class="language-card {% if request.resolver_match.url_name == 'java_editor' %}active{% endif %}" title="Java">
+                <i class="devicon-java-plain"></i>
+            </a>
+        
+            <!-- Планируемые языки (пока без ссылок) -->
+            <div class="language-card" title="C (coming soon)">
+                <i class="devicon-c-plain"></i>
+            </div>
+            <div class="language-card" title="C++ (coming soon)">
+                <i class="devicon-cplusplus-plain"></i>
+            </div>
+            <div class="language-card" title="C# (coming soon)">
+                <i class="devicon-csharp-plain"></i>
+            </div>
+            <div class="language-card" title="PHP (coming soon)">
+                <i class="devicon-php-plain"></i>
+            </div>
+            <div class="language-card" title="Ruby (coming soon)">
+                <i class="devicon-ruby-plain"></i>
+            </div>
+            <div class="language-card" title="Go (coming soon)">
+                <i class="devicon-go-plain"></i>
+            </div>
+            <div class="language-card" title="Rust (coming soon)">
+                <i class="devicon-rust-plain"></i>
+            </div>
+            <div class="language-card" title="Swift (coming soon)">
+                <i class="devicon-swift-plain"></i>
+            </div>
+            <div class="language-card" title="Kotlin (coming soon)">
+                <i class="devicon-kotlin-plain"></i>
+            </div>
+            <div class="language-card" title="TypeScript (coming soon)">
+                <i class="devicon-typescript-plain"></i>
+            </div>
+        </div>
+
+        <div id="editor">
+            <textarea id="code">{% block default_code %}{% endblock %}</textarea>
+        </div>
+            <div class="resizer" id="resizer"></div>
+        <div id="output">
+            <pre id="result"></pre>
+            <div id="input-container" style="display: none;">
+                <span id="input-prompt"></span>
+                <input type="text" id="user-input" class="code-input">
+            </div>
+        </div>
+    </div>
+
+    {% block scripts %}
+    <script src="{% static 'js/resize.js' %}"></script>
+    <script src="{% static 'js/layout.js' %}"></script>
+    {% endblock %}
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Java Editor{% endblock %}
+{% block header %}Java Editor{% endblock %}
+{% block file_accept %}.java{% endblock %}
+
+{% block extra_head %}
+<!-- Java-specific CodeMirror mode -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+{% endblock %}
+
+{% block default_code %}// Welcome to Java Editor!
+class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+    }
+}{% endblock %}
+
+{% block extra_scripts %}
+<script type="module">
+    import { initJavaEditor } from "{% static 'js/languages/java/java-main.js' %}";
+    import { initThemeToggle } from "{% static 'js/theme.js' %}";
+    import { initAutoClose } from "{% static 'js/autoClose.js' %}";
+
+    const javaEditor = initJavaEditor();
+    
+    if (javaEditor && javaEditor.editor) {
+        const editor = javaEditor.editor;
+        window.editor = editor;
+        
+        initThemeToggle(editor);
+        initAutoClose(editor);
+        
+        document.getElementById('run-btn').addEventListener('click', () => {
+            javaEditor.executeCode();
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            if (confirm("Очистить редактор и вывод?")) {
+                editor.setValue('// Ваш код на Java...\n\npublic class Main {\n    public static void main(String[] args) {\n        \n    }\n}');
+                document.getElementById('result').innerHTML = '';
+            }
+        });
+    
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/x-java-source' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Main.java';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    } else {
+        console.error('Не удалось инициализировать редактор Java');
+    }
+</script>
+{% endblock %}

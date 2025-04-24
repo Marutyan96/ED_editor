@@ -1,0 +1,55 @@
+#run-btn {
+    background: rgb(0, 139, 81);
+}
+
+.controls {
+    background: linear-gradient(145deg, #898989, #5e5e5e);
+    padding: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    display: flex;
+    gap: 6px;
+    border: 1px solid #000000;
+}
+
+.controls button {
+    background: linear-gradient(to bottom, #4a4a4a, #2d2d2d);
+    border: 2px outset #666;
+    color: rgb(221, 221, 221);
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.controls button:hover {
+    background: linear-gradient(to bottom, #5a5a5a, #3d3d3d);
+}
+
+.controls button:active {
+    border-style: inset;
+    box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

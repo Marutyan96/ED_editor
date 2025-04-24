@@ -1,0 +1,66 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}JavaScript Editor{% endblock %}
+{% block header %}JavaScript Editor{% endblock %}
+{% block file_accept %}.js{% endblock %}
+
+{% block extra_head %}
+<!-- JavaScript-specific CodeMirror mode -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+{% endblock %}
+
+{% block default_code %}// Welcome to JavaScript Editor!
+console.log("Hello, World!");
+
+function greet(name) {
+    return `Hello, ${name}!`;
+}
+
+// Try me:
+console.log(greet("Awesome Coder"));{% endblock %}
+
+{% block extra_scripts %}
+<script type="module">
+    import { initJSEditor } from "{% static 'js/languages/js/javascript-main.js' %}";
+    import { initThemeToggle } from "{% static 'js/theme.js' %}";
+    import { initAutoClose } from "{% static 'js/autoClose.js' %}";
+
+    const jsEditor = initJSEditor();
+    
+    if (jsEditor && jsEditor.editor) {
+        const editor = jsEditor.editor;
+        window.editor = editor;
+        
+        initThemeToggle(editor);
+        initAutoClose(editor);
+        
+        document.getElementById('run-btn').addEventListener('click', () => {
+            jsEditor.executeCode();
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            if (confirm("Очистить редактор и вывод?")) {
+                editor.setValue('// Ваш код на JavaScript...\n\n');
+                document.getElementById('result').innerHTML = '';
+            }
+        });
+    
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/javascript' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'script.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    } else {
+        console.error('Не удалось инициализировать редактор JavaScript');
+    }
+</script>
+{% endblock %}

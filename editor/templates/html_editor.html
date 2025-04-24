@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}HTML/CSS/JS Editor{% endblock %}
+{% block header %}Редактор HTML/CSS/JS{% endblock %}
+{% block extra_head %}
+<!-- Подсветка HTML/CSS/JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+{% endblock %}
+{% block default_code %}
+<!-- Пользователь может писать свой код здесь -->
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { 
+            font-family: Arial; 
+            text-align: center;
+            padding: 20px;
+        }
+        h1 { color: #4285f4; }
+    </style>
+</head>
+<body>
+    <h1>Мой проект</h1>
+    <button onclick="alert('JS работает!')">Нажми меня</button>
+</body>
+</html>
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="module">
+    import { initEditor } from "{% static 'js/languages/html/html-main.js' %}";
+    import { runCode } from "{% static 'js/languages/html/html-runner.js' %}";
+    import { initButtons } from "{% static 'js/buttons.js' %}";
+    import { initThemeToggle } from "{% static 'js/theme.js' %}";
+
+    const { editor, setupRunCode } = initEditor();
+    
+    if (editor) {
+        setupRunCode(runCode);
+        initButtons(editor, runCode); // Передаем runCode как параметр
+        initThemeToggle(editor);
+        
+        // Автозапуск при загрузке
+        setTimeout(() => runCode(editor.getValue()), 300);
+    }
+</script>
+{% endblock %}

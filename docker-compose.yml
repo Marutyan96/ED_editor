@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: daphne -b 0.0.0.0 -p 8000 code_editor.asgi:application
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - java_tmp:/tmp/java
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - JAVA_TMP_DIR=/tmp/java
+    depends_on:
+      - redis
+    networks:
+      - backend
+    privileged: true
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+
+volumes:
+  redis_data:
+  java_tmp:
+
+networks:
+  backend:
+    driver: bridge
