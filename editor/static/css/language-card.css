@@ -1,0 +1,84 @@
+.language-selector-container {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    background-color: #a5cbd2;
+    border-left: 1px solid #4a4949;
+    z-index: 102;
+    overflow-y: auto; /* Включаем скролл */
+    scrollbar-width: none; /* Для Firefox */
+    -ms-overflow-style: none; /* Для IE и Edge */
+}
+
+/* Скрываем скроллбар для WebKit браузеров (Chrome, Safari) */
+.language-selector-container::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+    background: transparent;
+}
+
+.language-card {
+    border: 1px solid #4a4949;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: #dcdcdc;
+    border-radius: 50%;
+    color: #333333;
+    font-size: 20px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    flex-shrink: 0; /* Предотвращает сжатие иконок */
+}
+
+/* Остальные стили остаются без изменений */
+.language-card:hover {
+    background-color: #70b1af;
+    transform: scale(1.1);
+}
+
+
+.dark-theme .language-selector-container {
+    background-color: #2d2d2d;
+    border-left-color: #444444;
+}
+
+
+
+/* Делаем все иконки одноцветными */
+.language-selector-container .devicon {
+    color: #333; /* Ваш цвет для светлой темы */
+    font-size: 1.5rem; /* Размер иконок */
+}
+
+
+/* Стиль для активной иконки языка */
+.language-card.active {
+    background-color: rgba(76, 175, 80, 0.2);
+    border: 2px solid #4CAF50;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+.language-card.active i {
+    color: #4CAF50;
+    filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.7));
+}
+
+/* Для "coming soon" иконок */
+.language-card:not([href]) {
+    opacity: 0.6;
+    filter: grayscale(30%);
+}
