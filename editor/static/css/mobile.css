@@ -1,0 +1,222 @@
+/* Общие ограничения */
+html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    height: 100%;
+    background-color: #000;
+}
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Consolas', monospace;
+    overflow: hidden; /* Предотвращаем двойную прокрутку */
+}
+
+@media (max-width: 768px) {
+
+
+    .pixel-logo {
+        font-size: 18px !important;
+        line-height: 1;
+        white-space: nowrap;
+    }
+
+    /* Кнопки управления */
+    .controls {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 4px; /* Уменьшаем промежуток между кнопками */
+        padding: 4px;
+        justify-content: flex-start;
+        scrollbar-width: thin;
+    }
+
+    .controls button {
+        flex: 0 0 auto;
+        font-size: 12px; /* Уменьшаем размер шрифта */
+        padding: 4px 8px; /* Уменьшаем отступы */
+        min-width: 40px; /* Уменьшаем минимальную ширину кнопки */
+        white-space: nowrap;
+    }
+
+    /* Контейнер редактора и вывода */
+    #container {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+    }
+
+    #editor,
+    #output {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Языки */
+    .language-selector-container {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 10px 5px;
+        gap: 8px;
+        scroll-behavior: smooth;
+    }
+}
+@media (max-width: 480px) {
+    /* Общие настройки */
+    body {
+        font-size: 14px;
+        overflow-x: hidden;
+    }
+
+    /* Логотип */
+    .logo {
+        font-size: 1.2rem;
+        text-align: center;
+    }
+    
+    .pixel-logo {
+        font-size: 1.2rem;
+        letter-spacing: -0.5px;
+    }
+    
+    /* Панель управления - теперь в две строки */
+    .controls {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.3rem;
+        padding: 0.3rem;
+    }
+    
+    .controls button {
+        padding: 0.4rem 0.2rem;
+        font-size: 0.75rem;
+        min-height: 36px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .controls button i {
+        margin-right: 0;
+        margin-bottom: 0.2rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Основной контейнер */
+    #container {
+        flex-direction: column;
+        height: auto;
+        margin: 0;
+        padding: 0;
+    }
+    
+    #editor, #output {
+        width: 100% !important;
+        height: 40vh; /* Используем viewport height */
+        min-height: 200px;
+    }
+    #output {
+        border: solid rgb(87, 87, 87) 0.3px;
+    }
+
+    /* Редактор кода */
+    #code {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+    }
+    
+    .resizer {
+        display: none;
+    }
+    
+    /* Выбор языка - компактный вариант */
+    .language-selector-container {
+        grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+        gap: 0.4rem;
+        padding: 0.5rem 0.3rem;
+        margin-top: 0.5rem;
+    }
+    
+    .language-card {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+    
+    .social-links {
+        grid-column: span 3;
+        justify-self: center;
+    }
+    
+    /* Ввод/вывод */
+    #result {
+        font-size: 0.8rem;
+        padding: 0.4rem;
+        line-height: 1.3;
+        overflow-wrap: break-word;
+    }
+    
+    #input-container {
+        padding: 0.3rem;
+    }
+    
+    #user-input {
+        width: 100%;
+        padding: 0.4rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Оптимизация кнопок */
+    #run-btn {
+        grid-column: 1 / span 1;
+        background-color: #4CAF50;
+    }
+    
+    #clear-btn {
+        grid-column: 2 / span 1;
+    }
+    
+    #save-btn {
+        grid-column: 3 / span 1;
+    }
+    
+    #layout-toggle {
+        grid-column: 1 / span 2;
+    }
+    
+    #theme-toggle {
+        grid-column: 3 / span 1;
+    }
+    
+    /* Скрытие текста темы на маленьких экранах */
+    #theme-text {
+        display: none;
+    }
+    
+    /* Улучшение иконок */
+    .fa-play, .fa-trash, .fa-download, .fa-exchange-alt, .fa-moon {
+        font-size: 0.9rem;
+    }
+    
+    /* Оптимизация для landscape ориентации */
+    @media (orientation: landscape) {
+        #editor, #output {
+            height: 30vh;
+        }
+        
+        .controls {
+            grid-template-columns: repeat(5, 1fr);
+        }
+        
+        #run-btn, #clear-btn, #save-btn, #layout-toggle, #theme-toggle {
+            grid-column: auto;
+        }
+    }
+}

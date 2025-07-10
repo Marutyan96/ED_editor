@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Online PHP Editor - Run PHP Code Online{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="Free online PHP editor with syntax highlighting. Execute PHP scripts directly in your browser. Perfect for testing PHP code snippets.">
+    <meta name="keywords" content="php online editor, run php code online, php sandbox, php tester, php playground">
+    <meta property="og:title" content="Online PHP Editor - Run PHP Code Online">
+    <meta property="og:description" content="Test PHP scripts online with our free editor. No server setup required.">
+{% endblock %}
+
+{% block header %}<h1><i class="devicon-php-plain colored"></i> PHP Online Editor</h1>{% endblock %}
+{% block file_accept %}.php{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/php/php.min.js"></script>
+{% endblock %}
+
+
+
+{% block default_code %}
+<?php
+// Welcome to PHP Editor!
+echo "Hello, World!";
+?>
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="module">
+    import { initPhpEditor } from "{% static 'js/languages/php/php-main.js' %}";
+    import { initThemeToggle } from "{% static 'js/theme.js' %}";
+    import { initAutoClose } from "{% static 'js/autoClose.js' %}";
+
+    const phpEditor = initPhpEditor();
+    
+    if (phpEditor && phpEditor.editor) {
+        const editor = phpEditor.editor;
+        window.editor = editor;
+        
+        initThemeToggle(editor);
+        initAutoClose(editor);
+        
+        document.getElementById('run-btn').addEventListener('click', () => {
+            phpEditor.executeCode();
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            if (confirm("Очистить редактор и вывод?")) {
+                editor.setValue('<?php\n// Ваш PHP код...\n\necho "Hello, World!";\n?>');
+                document.getElementById('result').innerHTML = '';
+            }
+        });
+    
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/x-php' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'script.php';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    } else {
+        console.error('Не удалось инициализировать редактор PHP');
+    }
+</script>
+{% endblock %}

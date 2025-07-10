@@ -1,19 +1,29 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Java Editor{% endblock %}
-{% block header %}Java Editor{% endblock %}
+{% block title %}Online Java Editor - Run Java Code in Browser{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="Free online Java compiler and editor. Write, run and debug Java code directly in your browser. Supports Java 8, 11, 17. No installation required.">
+    <meta name="keywords" content="java online editor, run java code online, java compiler, java playground, online java ide">
+    <meta property="og:title" content="Online Java Editor - Run Java Code in Browser">
+    <meta property="og:description" content="Compile and execute Java code online without installation. Supports all Java versions.">
+{% endblock %}
+
+{% block header %}<h1><i class="devicon-java-plain colored"></i> Java Online Editor</h1>{% endblock %}
 {% block file_accept %}.java{% endblock %}
 
 {% block extra_head %}
-<!-- Java-specific CodeMirror mode -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/codemirror-hints.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
 {% endblock %}
 
-{% block default_code %}// Welcome to Java Editor!
-class HelloWorld {
+
+{% block default_code %}// Online Java Editor - Run Java code in browser
+public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        System.out.println("Hello, World!"); 
+        System.out.println("Write your Java code here");
     }
 }{% endblock %}
 

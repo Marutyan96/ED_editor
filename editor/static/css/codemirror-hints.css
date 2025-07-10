@@ -1,26 +1,71 @@
+/* Общие стили для подсказок CodeMirror */
 .CodeMirror-hints {
-    background: #f5f5f5;
-    border: 1px solid #ddd;
+    position: absolute;
+    border-radius: 4px;
     font-family: monospace;
+    font-size: 14px;
+    line-height: 1.4;
     z-index: 101;
-    overflow: hidden; 
-    
+    max-height: 20em;
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .CodeMirror-hint {
     padding: 3px 8px;
-    color: #333;
-    overflow: hidden; 
+    cursor: pointer;
+    white-space: pre;
+    overflow: hidden;
 }
 
-.hint-keyword { color: #7f0055; }
-.hint-builtin { color: #0066cc; }
-.hint-method { color: #207a7a; }
+.CodeMirror-hint-active {
+    background: #08f;
+    color: #fff;
+}
+
+.hint-keyword  { color: #7f0055; }
+.hint-builtin  { color: #02a8f3; }
+.hint-method   { color: #014949; }
 .hint-variable { color: #008800; }
 
 .error-line {
     color: #d00;
-    background-color: #fee;
+    background: #fee;
     padding: 2px 5px;
     border-left: 3px solid #d00;
+    white-space: pre-wrap;
+    font-family: monospace;
+}
+
+
+.CodeMirror-hints .hint-template::before { content: "📄 "; }
+.CodeMirror-hints .hint-d::before       { content: "⚙️ "; }
+
+body.dark-theme .CodeMirror-hints {
+    background: #2b2b2b;
+    border: 1px solid #444;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .CodeMirror-hint {
+    color: #dcdcdc;
+}
+
+body.dark-theme .CodeMirror-hint-active {
+    background: #005f87;
+    color: #fff;
+}
+
+body.dark-theme .hint-keyword  { color: #ff9d00; }
+body.dark-theme .hint-builtin  { color: #00d8ff; }
+body.dark-theme .hint-method   { color: #a6e22e; }
+body.dark-theme .hint-variable { color: #f92672; }
+
+body.dark-theme .error-line {
+    color: #f44747;
+    background: #3c1e1e;
+    border-left-color: #f44747;
 }

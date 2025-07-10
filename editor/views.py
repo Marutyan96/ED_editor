@@ -16,6 +16,21 @@ def java_editor(request):
 def html_editor(request):
     return render(request, 'html_editor.html')
 
+def c_editor(request):
+    return render(request, 'c.html')
+
+def cpp_editor(request):
+    return render(request, 'cplusplus_editor.html')
+
+def csharp_editor(request):
+    return render(request, 'csharp_editor.html')
+
+def php_editor(request):
+    return render(request, 'php_editor.html')
+
+def go_editor(request):
+    return render(request, 'go.html')
+
 @csrf_exempt
 def run_code(request):
     if request.method == 'POST':

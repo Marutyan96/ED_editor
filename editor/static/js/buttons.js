@@ -18,16 +18,22 @@ export function initButtons(editor, runCode) {
     // Сохранение кода
     saveBtn.addEventListener('click', () => {
         const code = editor.getValue();
-        const blob = new Blob([code], { type: 'text/html' }); // Меняем на text/html
+
+        // Читаем расширение и MIME-тип из data-атрибутов
+        const extension = saveBtn.dataset.fileExtension || 'txt';
+        const mimeType = saveBtn.dataset.mimeType || 'text/plain';
+
+        const blob = new Blob([code], { type: mimeType });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'code.html'; // Меняем расширение на .html
+        a.download = `code.${extension}`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     });
+
 
     // Запуск кода
     runBtn.addEventListener('click', () => {

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Online Go Editor - Run Golang Code Online{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="Free online Go (Golang) compiler and editor. Write and run Go code directly in your browser. Supports all Go versions.">
+    <meta name="keywords" content="go online editor, golang compiler, run go code online, go playground, go sandbox">
+    <meta property="og:title" content="Online Go Editor - Run Golang Code in Browser">
+    <meta property="og:description" content="Compile and execute Go programs online without installation. Perfect for testing Go snippets.">
+{% endblock %}
+
+{% block header %}<h1><i class="devicon-go-plain colored"></i> Go Editor</h1>{% endblock %}
+{% block file_accept %}.go{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/go/go.min.js"></script>
+{% endblock %}
+
+{% block default_code %}
+// Welcome to Go Editor!
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Hello, World!")
+}
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="module">
+    import { initGoEditor } from "{% static 'js/languages/go/go-main.js' %}";
+    import { initThemeToggle } from "{% static 'js/theme.js' %}";
+    import { initAutoClose } from "{% static 'js/autoClose.js' %}";
+
+    const goEditor = initGoEditor();
+    
+    if (goEditor && goEditor.editor) {
+        const editor = goEditor.editor;
+        window.editor = editor;
+        
+        initThemeToggle(editor);
+        initAutoClose(editor);
+        
+        document.getElementById('run-btn').addEventListener('click', () => {
+            goEditor.executeCode();
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            if (confirm("Очистить редактор и вывод?")) {
+                editor.setValue('// Ваш код на Go...\n\npackage main\n\nimport "fmt"\n\nfunc main() {\n    \n}');
+                document.getElementById('result').innerHTML = '';
+            }
+        });
+    
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/x-go' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'main.go';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    } else {
+        console.error('Не удалось инициализировать редактор Go');
+    }
+</script>
+{% endblock %}

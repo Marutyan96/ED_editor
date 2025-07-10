@@ -107,15 +107,10 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Убедись, что настроены пути к статическим файлам
 STATIC_URL = '/static/'
-
-# Путь, где будут собираться статические файлы при деплое (для продакшн)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Путь, где Django будет искать статические файлы в процессе разработки
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # добавляем директорию, где лежат статические файлы
+    os.path.join(BASE_DIR, 'static'),  
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -128,3 +123,13 @@ DOCKER_CONFIG = {
     'MEMORY_LIMIT': '100m',
     'TIMEOUT': 30
 }
+# settings.py
+import tempfile
+# C Execution settings
+C_EXECUTION_DIR = os.path.join(tempfile.gettempdir(), 'c_execution')
+MAX_EXECUTION_TIME = 5  # seconds
+MAX_OUTPUT_SIZE = 10000  # bytes
+
+# Create secure directory if not exists
+os.makedirs(C_EXECUTION_DIR, exist_ok=True)
+os.chmod(C_EXECUTION_DIR, 0o700)

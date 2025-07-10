@@ -1,3 +1,4 @@
+
 /* css/styles.css */
 body {
     margin: 0;
@@ -6,22 +7,19 @@ body {
     display: flex;
     flex-direction: column;
     font-family: 'Consolas', monospace;
+    overflow: hidden; /* Предотвращаем двойную прокрутку */
 }
-
-
-
-
-
 
 #container {
     position: relative;
     flex-grow: 1;
     width: 100%;
+    height: calc(100% - 60px); /* Учитываем высоту панели языков */
     border: solid 1px rgb(113, 113, 113);
     display: flex;
-    flex-direction: row; /* Default horizontal */
-    min-height: 0; /* Prevent flex shrinkage */
-    overflow: hidden; /* Ensure no overflow outside container */
+    flex-direction: row;
+    min-height: 0;
+    overflow: hidden;
 }
 
 #container.vertical {
@@ -51,8 +49,10 @@ body {
 #output {
     font-family: 'Consolas', monospace;
     padding-left: 10px;
-    background: #c0d8dc;
-    overflow-y: auto;
+    background: #F0F8FF;
+    overflow: auto; 
+        color: #00220f;
+
 }
 
 
@@ -150,11 +150,12 @@ body {
     font-weight: 100;
     font-size: 24px;
     color: #00ff8c; /* Классический зелёный терминала */
-
+    width: 100%;
     position: relative;
     display: inline-block;
     padding: 5px 10px;
     background-color: #111111; /* Тёмный фон как у IDE */
+
 }
 
 
@@ -170,3 +171,43 @@ body {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+.visually-hidden {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
+
+
+
+/* Изменить цвет курсора */
+/* базовый стиль по умолчанию (светлая тема) */
+.CodeMirror div.CodeMirror-cursor {
+    border-left: 2px solid #0c9c54 !important;
+}
+
+/* для тёмной темы — если класс установлен на body */
+body.dark-theme .CodeMirror div.CodeMirror-cursor {
+    border-left: 2px solid #00ff8c !important;
+}
+
+/* Убрать горизонтальный скролл в CodeMirror */
+.CodeMirror-hscrollbar {
+    display: none !important;
+}
+

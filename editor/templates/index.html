@@ -1,15 +1,22 @@
-
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Python Online Editor{% endblock %}
-{% block header %}Python Editor{% endblock %}
+{% block title %}Online Python Editor - Run Python Code Online{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="Free Python editor online. Execute Python 3 code directly in your browser. Perfect for learning Python and testing scripts.">
+    <meta name="keywords" content="python online editor, run python online, python compiler, python sandbox, python playground">
+    <meta property="og:title" content="Online Python Editor - Run Python Code Online">
+    <meta property="og:description" content="Write and run Python 3 code instantly in your browser. No installation required.">
+{% endblock %}
+
+{% block header %}<h1><i class="devicon-python-plain colored"></i> Python Editor</h1>{% endblock %}
 {% block file_accept %}.py{% endblock %}
 
 {% block extra_head %}
-<!-- Python-specific CodeMirror mode -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
 {% endblock %}
+
 
 {% block default_code %}# Welcome to Python Editor!
 print("Hello, World!")

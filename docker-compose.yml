@@ -3,21 +3,59 @@ version: '3.8'
 services:
   web:
     build: .
-    command: daphne -b 0.0.0.0 -p 8000 code_editor.asgi:application
+    command: daphne -b 0.0.0.0 -p 8000 --application-close-timeout 180 code_editor.asgi:application
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
       - java_tmp:/tmp/java
+      - temp_volume:/app/temp
+      - c_temp:/tmp/c_temp
+      - csharp_temp:/tmp/csharp_temp
+      - php_temp:/tmp/php_temp
+      - go_temp:/tmp/go_temp
+      - .:/app
     ports:
       - "8000:8000"
     environment:
       - PYTHONUNBUFFERED=1
       - DOCKER_HOST=unix:///var/run/docker.sock
       - JAVA_TMP_DIR=/tmp/java
-    depends_on:
-      - redis
+      - TEMP_DIR=/app/temp
+      - C_TEMP_DIR=/tmp/c_temp
+      - CSHARP_TEMP_DIR=/tmp/csharp_temp
+      - PHP_TEMP_DIR=/tmp/php_temp
+      - GO_TEMP_DIR=/tmp/go_temp
     networks:
       - backend
     privileged: true
+    restart: unless-stopped
+
+  channels:
+    build: .
+    command: daphne -b 0.0.0.0 -p 8001 --application-close-timeout 180 code_editor.asgi:application
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - java_tmp:/tmp/java
+      - temp_volume:/app/temp
+      - c_temp:/tmp/c_temp
+      - csharp_temp:/tmp/csharp_temp
+      - php_temp:/tmp/php_temp
+      - go_temp:/tmp/go_temp
+      - .:/app
+    ports:
+      - "8001:8001"
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - JAVA_TMP_DIR=/tmp/java
+      - TEMP_DIR=/app/temp
+      - C_TEMP_DIR=/tmp/c_temp
+      - CSHARP_TEMP_DIR=/tmp/csharp_temp
+      - PHP_TEMP_DIR=/tmp/php_temp
+      - GO_TEMP_DIR=/tmp/go_temp
+    networks:
+      - backend
+    privileged: true
+    restart: unless-stopped
 
   redis:
     image: redis:alpine
@@ -25,10 +63,16 @@ services:
       - redis_data:/data
     networks:
       - backend
+    restart: unless-stopped
 
 volumes:
   redis_data:
   java_tmp:
+  temp_volume:
+  c_temp:
+  csharp_temp:
+  php_temp:
+  go_temp:
 
 networks:
   backend:

@@ -1,9 +1,18 @@
-// static/js/languages/java/java-websocket.js
-
 export function initJavaWebSocket(outputElement) {
     const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
     const wsUrl = protocol + window.location.host + '/ws/editor/java/';
     
+    function renderErrorWithStyle(text) {
+        outputElement.innerHTML = '';
+        const lines = text.split('\n');
+        lines.forEach(line => {
+            const div = document.createElement('div');
+            div.className = 'error-line';
+            div.textContent = line || '\u00A0';
+            outputElement.appendChild(div);
+        });
+    }
+
     return new Promise((resolve) => {
         const socket = new WebSocket(wsUrl);
         let isReady = false;
@@ -11,7 +20,6 @@ export function initJavaWebSocket(outputElement) {
 
         socket.onopen = function() {
             isReady = true;
-            // Отправляем все сообщения из очереди
             while (messageQueue.length > 0) {
                 socket.send(messageQueue.shift());
             }
@@ -19,19 +27,25 @@ export function initJavaWebSocket(outputElement) {
                 execute: function(code) {
                     return new Promise((executeResolve) => {
                         const messageId = Date.now().toString();
-                        
+
                         const handleMessage = (e) => {
                             const data = JSON.parse(e.data);
                             if (data.messageId === messageId) {
                                 socket.removeEventListener('message', handleMessage);
-                                outputElement.textContent = data.message; // Заменяем текст вместо добавления
+
+                                if (data.message.toLowerCase().includes('error')) {
+                                    renderErrorWithStyle(data.message);
+                                } else {
+                                    outputElement.textContent = data.message;
+                                }
+                                
                                 outputElement.scrollTop = outputElement.scrollHeight;
                                 executeResolve();
                             }
                         };
-                        
+
                         socket.addEventListener('message', handleMessage);
-                        
+
                         if (isReady) {
                             socket.send(JSON.stringify({
                                 type: 'execute',

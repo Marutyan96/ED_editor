@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Online C Editor - Run C Code Online{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="Free online C compiler and editor. Write and run C code directly in your browser. Supports C11, C17 standards.">
+    <meta name="keywords" content="c online editor, c compiler, run c online, c playground, c ide online">
+    <meta property="og:title" content="Online C Editor - Run C Code in Browser">
+    <meta property="og:description" content="Compile and execute C programs online without installation. Perfect for embedded systems development.">
+{% endblock %}
+
+{% block header %}<h1><i class="devicon-c-plain colored"></i> C Editor</h1>{% endblock %}
+{% block file_accept %}.c,.h{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+{% endblock %}
+
+{% block default_code %}
+// Welcome to C Editor!
+#include <stdio.h>
+
+int main() {
+    printf("Hello, World!\n");
+    return 0;
+}
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="module">
+    import { initCEditor } from "{% static 'js/languages/c/c-main.js' %}";
+    import { initThemeToggle } from "{% static 'js/theme.js' %}";
+    import { initAutoClose } from "{% static 'js/autoClose.js' %}";
+
+    const cEditor = initCEditor();
+    
+    if (cEditor && cEditor.editor) {
+        const editor = cEditor.editor;
+        window.editor = editor;
+        
+        initThemeToggle(editor);
+        initAutoClose(editor);
+        
+        document.getElementById('run-btn').addEventListener('click', () => {
+            cEditor.executeCode();
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            if (confirm("Очистить редактор и вывод?")) {
+                editor.setValue('// Ваш код на C...\n\n#include <stdio.h>\n\nint main() {\n    \n    return 0;\n}');
+                document.getElementById('result').innerHTML = '';
+            }
+        });
+    
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/x-csrc' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'main.c';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    } else {
+        console.error('Не удалось инициализировать редактор C');
+    }
+</script>
+{% endblock %}

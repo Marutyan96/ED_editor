@@ -1,32 +1,62 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}HTML/CSS/JS Editor{% endblock %}
-{% block header %}Редактор HTML/CSS/JS{% endblock %}
+{% block title %}Online HTML/CSS/JS Editor - Run Code in Browser{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="Full-featured online editor for HTML, CSS and JavaScript with live preview. Perfect for web development testing and learning.">
+    <meta name="keywords" content="html editor online, css editor, javascript playground, web development editor, online code editor">
+    <meta property="og:title" content="Online HTML/CSS/JS Editor - Web Development Playground">
+    <meta property="og:description" content="Write and test HTML, CSS and JavaScript code with instant live preview. No setup required.">
+{% endblock %}
+
+{% block header %}<h1><i class="devicon-html5-plain-wordmark colored"></i> <i class="devicon-css3-plain-wordmark colored"></i> <i class="devicon-javascript-plain colored"></i> Web Editor</h1>{% endblock %}
+
 {% block extra_head %}
-<!-- Подсветка HTML/CSS/JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
 {% endblock %}
+
+{% block file_extension %}html{% endblock %}
+{% block mime_type %}text/html{% endblock %}
+
 {% block default_code %}
-<!-- Пользователь может писать свой код здесь -->
+<!-- Write your HTML/CSS/JS code here -->
+<!-- Example code you can write: -->
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body { 
-            font-family: Arial; 
-            text-align: center;
-            padding: 20px;
-        }
-        h1 { color: #4285f4; }
-    </style>
+  <title>Color Magic</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial;
+    }
+    h1 {
+      margin: 30px 0;
+    }
+  </style>
 </head>
 <body>
-    <h1>Мой проект</h1>
-    <button onclick="alert('JS работает!')">Нажми меня</button>
+  <h1>Click Adventure</h1>
+  <button id="magicBtn">Do Magic</button>
+  <script>
+    const btn = document.getElementById('magicBtn');
+    let clicks = 0;
+    
+    btn.addEventListener('click', () => {
+      clicks++;
+      document.body.style.background = `hsl(${clicks * 30}, 70%, 90%)`;
+      btn.textContent = ['Wow!', 'Amazing!', 'Again!', 'More!'][clicks % 4];
+      
+      if (clicks === 5) {
+        btn.insertAdjacentHTML('afterend', '<p>You unlocked secret mode!</p>');
+        btn.onclick = () => document.body.style.background = `#${Math.floor(Math.random()*16777215).toString(16)}`;
+      }
+    });
+  </script>
 </body>
 </html>
 {% endblock %}

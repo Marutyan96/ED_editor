@@ -1,15 +1,22 @@
-
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}JavaScript Editor{% endblock %}
-{% block header %}JavaScript Editor{% endblock %}
+{% block title %}Online JavaScript Editor - Run JS Code in Browser{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="Powerful JavaScript editor online. Write and test JS code with live preview. Supports ES6, React, Node.js syntax. No setup needed.">
+    <meta name="keywords" content="javascript editor online, js code online, run javascript, js playground, online js compiler">
+    <meta property="og:title" content="Online JavaScript Editor - Run JS Code in Browser">
+    <meta property="og:description" content="Test JavaScript code online with instant execution. Supports all modern JS features.">
+{% endblock %}
+
+{% block header %}<h1><i class="devicon-javascript-plain colored"></i> JavaScript Editor</h1>{% endblock %}
 {% block file_accept %}.js{% endblock %}
 
 {% block extra_head %}
-<!-- JavaScript-specific CodeMirror mode -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
 {% endblock %}
+
 
 {% block default_code %}// Welcome to JavaScript Editor!
 console.log("Hello, World!");

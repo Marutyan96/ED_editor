@@ -1,10 +1,9 @@
-// static/js/websocket.js
 let socket = null;
 
 export function runCode() {
     const result = document.getElementById('result');
     if (!window.editor) {
-        result.innerHTML = '<div class="execution-line error">Ошибка: редактор не инициализирован</div>';
+        result.innerHTML = '<div class="execution-line error">Error: editor is not initialized</div>';
         console.error('Editor not found in window.editor');
         return;
     }
@@ -23,7 +22,7 @@ export function runCode() {
             if (data.type === 'output') {
                 addOutput(data.data);
             } else if (data.type === 'input_request') {
-                handleInput(data.prompt);
+                handleInput(data.data.prompt);
             } else if (data.type === 'error') {
                 addError(data.data);
             }
@@ -34,7 +33,6 @@ export function runCode() {
         };
 
         socket.onclose = () => {
-            // Не добавляем сообщение о закрытии в вывод
             console.log('WebSocket connection closed');
         };
     }
@@ -72,7 +70,7 @@ export function runCode() {
     function addError(text) {
         const div = document.createElement('div');
         div.className = 'execution-line error';
-        div.textContent = `Ошибка: ${text}`;
+        div.textContent = `Error: ${text}`;
         result.appendChild(div);
         scrollToBottom();
     }
@@ -82,7 +80,7 @@ export function runCode() {
         container.className = 'execution-line input';
         
         const promptSpan = document.createElement('span');
-        promptSpan.textContent = prompt;
+        promptSpan.textContent = prompt || 'Input: ';
         
         const input = document.createElement('input');
         input.type = 'text';
@@ -91,11 +89,21 @@ export function runCode() {
         
         input.onkeydown = (e) => {
             if (e.key === 'Enter') {
+                const value = e.target.value;
+                // Добавляем ввод в историю
+                const inputLine = document.createElement('div');
+                inputLine.className = 'execution-line input-line';
+                inputLine.textContent = `${prompt}${value}`;
+                result.appendChild(inputLine);
+                
+                // Отправляем на сервер
                 socket.send(JSON.stringify({
                     type: 'user_input',
-                    value: e.target.value
+                    value: value
                 }));
-                input.replaceWith(document.createTextNode(e.target.value));
+                
+                // Удаляем поле ввода
+                container.remove();
                 scrollToBottom();
             }
         };
@@ -103,6 +111,7 @@ export function runCode() {
         container.appendChild(promptSpan);
         container.appendChild(input);
         result.appendChild(container);
+        input.focus();
         scrollToBottom();
     }
     

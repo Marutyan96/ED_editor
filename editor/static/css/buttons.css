@@ -1,9 +1,6 @@
-#run-btn {
-    background: rgb(0, 139, 81);
-}
-
+/* Основные стили панели */
 .controls {
-    background: linear-gradient(145deg, #898989, #5e5e5e);
+    background: rgb(0, 104, 145);
     padding: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     display: flex;
@@ -11,45 +8,51 @@
     border: 1px solid #000000;
 }
 
+/* Общие стили для всех кнопок */
 .controls button {
     background: linear-gradient(to bottom, #4a4a4a, #2d2d2d);
     border: 2px outset #666;
-    color: rgb(221, 221, 221);
-    font-family: 'Courier New', monospace;
+    color: rgb(255, 255, 255);
+    font-family: sans-serif;
     font-weight: bold;
     padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
     box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    transition: all 0.2s ease;
 }
 
+/* Специфичные стили для кнопки Run */
+.controls #run-btn {
+    background: rgb(0, 139, 81) !important;
+    color: #000000 !important;
+}
+
+/* Стили иконки кнопки Run */
+.controls #run-btn i.fas.fa-play {
+    color: inherit !important;
+}
+
+/* Общие hover-эффекты для всех кнопок */
 .controls button:hover {
     background: linear-gradient(to bottom, #5a5a5a, #3d3d3d);
 }
 
+/* Специальные hover-эффекты только для кнопки Run */
+.controls #run-btn:hover {
+    background: rgb(0, 170, 100) !important;
+    color: #ffffff !important;
+}
+
+
+/* Общие active-эффекты для всех кнопок */
 .controls button:active {
     border-style: inset;
     box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Active-эффект для кнопки Run */
+.controls #run-btn:active {
+    transform: scale(0.98);
+    background: rgb(0, 120, 70) !important;
+}

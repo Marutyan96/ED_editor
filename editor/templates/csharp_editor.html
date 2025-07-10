@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Online C# Editor - Run C# Code Online{% endblock %}
+
+{% block meta_description %}
+    <meta name="description" content="Free online C# compiler and editor. Write and run C# code directly in your browser. Supports .NET Core syntax.">
+    <meta name="keywords" content="c# online editor, csharp compiler, run c# online, c# playground, dotnet editor">
+    <meta property="og:title" content="Online C# Editor - Run C# Code in Browser">
+    <meta property="og:description" content="Compile and execute C# programs online without Visual Studio. Perfect for C# learners.">
+{% endblock %}
+
+{% block header %}<h1><i class="devicon-csharp-plain colored"></i> C# Editor</h1>{% endblock %}
+{% block file_accept %}.cs{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+{% endblock %}
+
+
+{% block default_code %}
+// Welcome to C# Editor!
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Hello, World!");
+    }
+}
+{% endblock %}
+
+{% block extra_scripts %}
+<script type="module">
+    import { initCSharpEditor } from "{% static 'js/languages/csharp/csharp-main.js' %}";
+    import { initThemeToggle } from "{% static 'js/theme.js' %}";
+    import { initAutoClose } from "{% static 'js/autoClose.js' %}";
+
+    const csharpEditor = initCSharpEditor();
+    
+    if (csharpEditor && csharpEditor.editor) {
+        const editor = csharpEditor.editor;
+        window.editor = editor;
+        
+        initThemeToggle(editor);
+        initAutoClose(editor);
+        
+        document.getElementById('run-btn').addEventListener('click', () => {
+            csharpEditor.executeCode();
+        });
+
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            if (confirm("Очистить редактор и вывод?")) {
+                editor.setValue('// Ваш код на C#...\n\nusing System;\n\nclass Program\n{\n    static void Main(string[] args)\n    {\n        \n    }\n}');
+                document.getElementById('result').innerHTML = '';
+            }
+        });
+    
+        document.getElementById('save-btn').addEventListener('click', function() {
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/x-csharp' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'program.cs';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    } else {
+        console.error('Не удалось инициализировать редактор C#');
+    }
+</script>
+{% endblock %}

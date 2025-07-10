@@ -16,13 +16,13 @@ class JavaConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        print(f"Получено сообщение: {data}")
+        print(f"Received message: {data}")
         if data['type'] == 'execute':
             code = data['code']
             message_id = data['messageId']
             result = await self.execute_java_code(code)
             response = {'messageId': message_id, 'message': result}
-            print(f"Отправляем ответ: {response}")
+            print(f"Sending response: {response}")
             await self.send(text_data=json.dumps(response))
 
     async def execute_java_code(self, code):
@@ -31,21 +31,21 @@ class JavaConsumer(AsyncWebsocketConsumer):
         tmp_dir = os.path.join(base_tmp_dir, execution_id)
         
         try:
-            # Определяем имя главного класса
+            # Определяем имя класса с main()
             class_name = self.detect_main_class(code)
             if not class_name:
-                return "Ошибка: Не найден класс с методом main()"
+                return "Error: No class with main() method found"
             
             java_file = os.path.join(tmp_dir, f"{class_name}.java")
-            print(f"Создаём папку: {tmp_dir}")
+            print(f"Creating directory: {tmp_dir}")
             os.makedirs(tmp_dir, exist_ok=True)
             
-            print(f"Записываем код в: {java_file}")
+            print(f"Writing code to: {java_file}")
             with open(java_file, 'w') as f:
                 f.write(code)
 
-            # Компилируем код
-            print(f"Команда компиляции: javac {java_file}")
+            # Компиляция
+            print(f"Compilation command: javac {java_file}")
             compile_process = subprocess.run(
                 ["javac", java_file],
                 capture_output=True,
@@ -53,46 +53,46 @@ class JavaConsumer(AsyncWebsocketConsumer):
                 cwd=tmp_dir
             )
             
-            print(f"Код возврата компиляции: {compile_process.returncode}")
+            print(f"Compilation return code: {compile_process.returncode}")
             if compile_process.returncode != 0:
                 error_msg = compile_process.stderr or compile_process.stdout
-                return f"Ошибка компиляции:\n{error_msg}"
+                # Убираем из ошибки абсолютный путь к файлу, оставляя только имя файла
+                error_msg = re.sub(rf'{re.escape(tmp_dir)}/', '', error_msg)
+                return f"Compilation error:\n{error_msg}"
 
-            # Запускаем программу
-            print(f"Запускаем: java -cp {tmp_dir} {class_name}")
+            # Запуск программы
+            print(f"Running: java -cp {tmp_dir} {class_name}")
             run_process = subprocess.run(
                 ["java", "-cp", tmp_dir, class_name],
                 capture_output=True,
                 text=True
             )
             
-            print(f"Вывод запуска: {run_process.stdout}")
+            print(f"Execution output: {run_process.stdout}")
             if run_process.returncode != 0:
                 error_msg = run_process.stderr or run_process.stdout
-                return f"Ошибка выполнения:\n{error_msg}"
+                return f"Runtime error:\n{error_msg}"
 
-            return run_process.stdout or "Программа выполнена без вывода"
+            return run_process.stdout or "Program executed with no output"
 
         except Exception as e:
-            print(f"Исключение: {str(e)}")
-            return f"Ошибка: {str(e)}"
+            print(f"Exception: {str(e)}")
+            return f"Error: {str(e)}"
 
         finally:
-            print(f"Удаляем: {tmp_dir}")
+            print(f"Deleting: {tmp_dir}")
             if os.path.exists(tmp_dir):
                 shutil.rmtree(tmp_dir, ignore_errors=True)
 
     def detect_main_class(self, code):
         """
-        Определяет имя класса, содержащего метод main()
+        Определяет имя класса с методом main()
         """
-        # Ищем public класс с методом main
         class_pattern = r'public\s+class\s+(\w+)\s*{[^}]*public\s+static\s+void\s+main\s*\([^)]*\)'
         match = re.search(class_pattern, code, re.DOTALL)
         if match:
             return match.group(1)
         
-        # Если public класс не найден, ищем любой класс с методом main
         class_pattern = r'class\s+(\w+)\s*{[^}]*public\s+static\s+void\s+main\s*\([^)]*\)'
         match = re.search(class_pattern, code, re.DOTALL)
         if match:

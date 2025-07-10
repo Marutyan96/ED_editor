@@ -4,14 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Online code editor with real-time execution">
-    <title>{% block title %}Code Editor{% endblock %}</title>
+    <title>{% block title %}Online Code Editor – HTML, JS, Python ,Java ,php, C#{% endblock %}</title>
+    <meta name="description" content="Free online code editor to write and run HTML, CSS, JavaScript, Python and Java code in real-time. No registration needed. Try now!">
+    
+    <meta property="og:title" content="Online Code Editor – Run HTML, JS, Python in Browser">
+    <meta property="og:description" content="Try a powerful online code editor to write and run code instantly.">
+    <meta property="og:url" content="https://onlinecodeeditor.ru/">
+    <meta property="og:image" content="{% static 'images/preview.png' %}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Online Code Editor – Write & Run Code Online">
+    <meta name="twitter:description" content="Run HTML, JS, and Python online instantly with our free playground.">
+    <meta name="twitter:image" content="{% static 'images/preview.png' %}">
 
-<!-- Для PNG -->
-<link rel="icon" type="image/png" href="{% static 'images/favicon_io/favicon.png' %}">
+    <!-- Для PNG -->
+    <link rel="icon" type="image/png" href="{% static 'images/favicon_io/favicon.png' %}">
 
-<!-- Для ICO (если нужно) -->
-<link rel="shortcut icon" href="{% static 'images/favicon_io/favicon.ico' %}" type="image/x-icon">
+    <!-- Для ICO (если нужно) -->
+    <link rel="shortcut icon" href="{% static 'images/favicon_io/favicon.ico' %}" type="image/x-icon">
 
     {% comment %} шрифт Pixelify Sans {% endcomment %}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap">
@@ -26,6 +35,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
     
     <!-- Общие стили -->
+    <link rel="manifest" href="{% static 'images/favicon_io/site.webmanifest' %}">    <link rel="stylesheet" href="{% static 'css/mobile.css' %}">
     <link rel="stylesheet" href="{% static 'css/codemirror-hints.css' %}">
     <link rel="stylesheet" href="{% static 'css/language-card.css' %}">
     <link rel="stylesheet" href="{% static 'css/dark.css' %}">
@@ -35,73 +45,45 @@
     <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
 
     {% block extra_head %}{% endblock %}
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "Online Code Editor",
+          "url": "https://onlinecodeeditor.ru",
+          "applicationCategory": "DeveloperApplication",
+          "operatingSystem": "All",
+          "description": "Free online code editor supporting HTML, CSS, JavaScript, Python, and Java with real-time execution.",
+          "keywords": "online code editor, run html online, javascript editor, python online compiler"
+        }
+    </script>
+        
 </head>
 <body>
+    <h1 class="visually-hidden">Online Code Editor – Write & Run HTML, JS, Python Online</h1>
+
     <header class="logo" translate="no">
-        <span class="pixel-logo" translate="no">Run_Code</span>
-        {% block header %}{% endblock %}
+        <span class="pixel-logo" translate="no">OnlineCodeEditor</span>
     </header>
     
     <nav class="controls" translate="no">
-        <button id="run-btn" class="run-button" title="Run code"><i class="fas fa-play"></i> Run</button>
-        <button id="clear-btn" class="clear-button" title="Clear editor and output"><i class="fas fa-trash"></i> Clear</button>
+        <button id="run-btn" class="run-button" title="Run code (Ctrl+Enter)"><i class="fas fa-play"></i> Run</button>        <button id="clear-btn" class="clear-button" title="Clear editor and output"><i class="fas fa-trash"></i> Clear</button>
         <input type="file" id="load-file" accept="{% block file_accept %}.txt{% endblock %}" style="display: none;">
-        <button id="save-btn" class="save-button" title="Save code"><i class="fas fa-download"></i> Save</button>
+        <button id="save-btn"
+            class="save-button"
+            title="Save code"
+            data-file-extension="{% block file_extension %}py{% endblock %}"
+            data-mime-type="{% block mime_type %}text/x-python{% endblock %}">
+            <i class="fas fa-download"></i> Save
+        </button>
         <button id="layout-toggle" title="Toggle layout"><i class="fas fa-exchange-alt"></i> Layout</button>
         <button id="theme-toggle" title="Toggle theme">
-            <i class="fas fa-moon"></i> <span id="theme-text">Dark</span>
+            <i class="fas fa-moon"></i> <span id="theme-text"></span>
         </button>
     </nav>
     
     <div id="container">
-        <div class="language-selector-container">
-            <!-- Рабочие редакторы -->
-            <a href="{% url 'index' %}" class="language-card {% if request.resolver_match.url_name == 'index' %}active{% endif %}" title="Python">
-                <i class="devicon-python-plain"></i>
-            </a>
-            <a href="{% url 'javascript_editor' %}" class="language-card {% if request.resolver_match.url_name == 'javascript_editor' %}active{% endif %}" title="JavaScript">
-                <i class="devicon-javascript-plain"></i>
-            </a>
-            <a href="{% url 'html_editor' %}" class="language-card {% if request.resolver_match.url_name == 'html_editor' %}active{% endif %}" title="HTML/CSS">
-                <i class="devicon-html5-plain"></i>
-            </a>
-            <a href="{% url 'java_editor' %}" class="language-card {% if request.resolver_match.url_name == 'java_editor' %}active{% endif %}" title="Java">
-                <i class="devicon-java-plain"></i>
-            </a>
-        
-            <!-- Планируемые языки (пока без ссылок) -->
-            <div class="language-card" title="C (coming soon)">
-                <i class="devicon-c-plain"></i>
-            </div>
-            <div class="language-card" title="C++ (coming soon)">
-                <i class="devicon-cplusplus-plain"></i>
-            </div>
-            <div class="language-card" title="C# (coming soon)">
-                <i class="devicon-csharp-plain"></i>
-            </div>
-            <div class="language-card" title="PHP (coming soon)">
-                <i class="devicon-php-plain"></i>
-            </div>
-            <div class="language-card" title="Ruby (coming soon)">
-                <i class="devicon-ruby-plain"></i>
-            </div>
-            <div class="language-card" title="Go (coming soon)">
-                <i class="devicon-go-plain"></i>
-            </div>
-            <div class="language-card" title="Rust (coming soon)">
-                <i class="devicon-rust-plain"></i>
-            </div>
-            <div class="language-card" title="Swift (coming soon)">
-                <i class="devicon-swift-plain"></i>
-            </div>
-            <div class="language-card" title="Kotlin (coming soon)">
-                <i class="devicon-kotlin-plain"></i>
-            </div>
-            <div class="language-card" title="TypeScript (coming soon)">
-                <i class="devicon-typescript-plain"></i>
-            </div>
-        </div>
-
         <div id="editor">
             <textarea id="code">{% block default_code %}{% endblock %}</textarea>
         </div>
@@ -115,6 +97,69 @@
         </div>
     </div>
 
+<div class="language-selector-container">
+    <!-- Рабочие редакторы -->
+    <a href="{% url 'index' %}" class="language-card {% if request.resolver_match.url_name == 'index' %}active{% endif %}" title="Python" aria-label="Python Online Editor">
+        <i class="devicon-python-plain" aria-hidden="true"></i>
+    </a>
+    <a href="{% url 'javascript_editor' %}" class="language-card {% if request.resolver_match.url_name == 'javascript_editor' %}active{% endif %}" title="JavaScript" aria-label="JavaScript Online Editor">
+        <i class="devicon-javascript-plain" aria-hidden="true"></i>
+    </a>
+    <a href="{% url 'html_editor' %}" class="language-card {% if request.resolver_match.url_name == 'html_editor' %}active{% endif %}" title="HTML/CSS" aria-label="HTML CSS Online Editor">
+        <i class="devicon-html5-plain" aria-hidden="true"></i>
+    </a>
+    <a href="{% url 'java_editor' %}" class="language-card {% if request.resolver_match.url_name == 'java_editor' %}active{% endif %}" title="Java" aria-label="Java Online Editor">
+        <i class="devicon-java-plain" aria-hidden="true"></i>
+    </a>
+
+    <!-- Планируемые языки -->
+    <a href="{% url 'c_editor' %}" class="language-card {% if request.resolver_match.url_name == 'c_editor' %}active{% endif %}" title="C" aria-label="C Online Editor">
+        <i class="devicon-c-plain" aria-hidden="true"></i>
+    </a>
+    <a href="{% url 'cpp_editor' %}" class="language-card {% if request.resolver_match.url_name == 'cpp_editor' %}active{% endif %}" title="C++" aria-label="C++ Online Editor">
+        <i class="devicon-cplusplus-plain" aria-hidden="true"></i>
+    </a>
+    <a href="{% url 'csharp_editor' %}" class="language-card {% if request.resolver_match.url_name == 'csharp_editor' %}active{% endif %}" title="C#" aria-label="C# Online Editor">
+        <i class="devicon-csharp-plain" aria-hidden="true"></i>
+    </a>
+    <a href="{% url 'php_editor' %}" class="language-card {% if request.resolver_match.url_name == 'php_editor' %}active{% endif %}" title="PHP" aria-label="PHP Online Editor">
+        <i class="devicon-php-plain" aria-hidden="true"></i>
+    </a>
+    <a href="{% url 'go_editor' %}" class="language-card {% if request.resolver_match.url_name == 'go_editor' %}active{% endif %}" title="Go" aria-label="Go Online Editor">
+        <i class="devicon-go-plain" aria-hidden="true"></i>
+    </a>
+    
+    <div class="language-card" title="Rust (coming soon)" aria-label="Rust Online Editor Coming Soon">
+        <i class="devicon-rust-plain" aria-hidden="true"></i>
+    </div>
+    <div class="language-card" title="Swift (coming soon)" aria-label="Swift Online Editor Coming Soon">
+        <i class="devicon-swift-plain" aria-hidden="true"></i>
+    </div>
+    <div class="language-card" title="Kotlin (coming soon)" aria-label="Kotlin Online Editor Coming Soon">
+        <i class="devicon-kotlin-plain" aria-hidden="true"></i>
+    </div>
+    <div class="language-card" title="TypeScript (coming soon)" aria-label="TypeScript Online Editor Coming Soon">
+        <i class="devicon-typescript-plain" aria-hidden="true"></i>
+    </div>
+
+    <!-- Соцсети -->
+    <div class="social-links">
+        <a href="https://t.me/Edgar_Marutyan_96" class="language-card social-card" title="Telegram" aria-label="Contact via Telegram" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-telegram" aria-hidden="true"></i>
+        </a>
+        <a href="https://wa.me/79052422519" class="language-card social-card" title="WhatsApp" aria-label="Contact via WhatsApp" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+        </a>
+        <a href="https://github.com/Marutyan96" class="language-card social-card" title="GitHub" aria-label="View GitHub Profile" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-github" aria-hidden="true"></i>
+        </a>
+    </div>
+</div>
+
+
+
+
+    
     {% block scripts %}
     <script src="{% static 'js/resize.js' %}"></script>
     <script src="{% static 'js/layout.js' %}"></script>
