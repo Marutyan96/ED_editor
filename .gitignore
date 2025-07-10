@@ -1,1 +1,41 @@
+# Виртуальное окружение
+venv/
+env/
+.env
+.venv/
+env.bak/
+venv.bak/
+
+# Python кэш
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
 staticfiles/
+*.sqlite3
+media/
+
+# Локальные конфигурации и временные файлы
+*.log
+*.pot
+*.pyc
+.local
+*.DS_Store
+
+# Docker
+*.dockerignore
+Dockerfile
+docker-compose.yml
+
+# IDE и редакторы
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Другие временные файлы
+*.bak
+*.swp
+*.swo
+*.tmp
